@@ -5,4 +5,5 @@ echo $(curl \
     -sf \
     -H "Accept: application/vnd.github.v3+json" \
     "https://api.github.com/repos/loadimpact/k6/releases?per_page=30" \
-    | sed -nE 's/^    "tag_name": "v(.+)",$/\1/pg')
+    | sed -nE 's/^    "tag_name": "v(.+)",$/\1/pg' \
+	| sed -n -e '1!G;h;$p')
