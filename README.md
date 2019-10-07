@@ -3,5 +3,5 @@
 
 ## Install
 ```
-asdf plugin-add k6 https://github.com/grimoh117/asdf-k6.git
+asdf plugin-add k6 https://github.com/grimoh/asdf-k6.git
 ```
