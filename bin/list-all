@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-releases_path="https://api.github.com/repos/loadimpact/k6/releases?per_page=30"
+releases_path="https://api.github.com/repos/loadimpact/k6/releases"
 cmd="curl -sf"
 if [ -n "$OAUTH_TOKEN" ]; then
   cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
