@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 set -e
 
-echo $(curl \
-    -sf \
-    -H "Accept: application/vnd.github.v3+json" \
-    "https://api.github.com/repos/loadimpact/k6/releases?per_page=30" \
+releases_path="https://api.github.com/repos/loadimpact/k6/releases?per_page=30"
+cmd="curl -sf"
+if [ -n "$OAUTH_TOKEN" ]; then
+  cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
+fi
+cmd="$cmd $releases_path"
+
+
+echo $(eval $cmd \
     | sed -nE 's/^    "tag_name": "v(.+)",$/\1/pg' \
     | sed -n -e '1!G;h;$p')
