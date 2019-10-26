@@ -1,0 +1,28 @@
+name: Main workflow
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        k6: [0.25.0]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install asdf-vm
+        run: git clone https://github.com/asdf-vm/asdf.git $HOME/asdf
+
+      - name: Install loadimpact/k6 and run test
+        run: |
+          . $HOME/asdf/asdf.sh
+          asdf plugin-add k6 $GITHUB_WORKSPACE
+          asdf list-all k6
+          asdf install k6 ${{ matrix.k6 }}
+          asdf global k6 ${{ matrix.k6 }}
+          k6 version
