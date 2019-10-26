@@ -8,6 +8,5 @@ if [ -n "$OAUTH_TOKEN" ]; then
 fi
 cmd="$cmd $releases_path"
 
-
 versions=$(eval $cmd | sed -nE 's/^    "tag_name": "v(.+)",$/\1/pg' | sed -n -e '1!G;h;$p')
 echo $versions
