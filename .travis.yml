@@ -5,7 +5,7 @@ before_script:
 script:
   - asdf plugin-add k6 ./
   - asdf list-all k6
-  - asdf plugin-test k6 ./ 'k6 help' || exit 1
+  - asdf plugin-test k6 ./ || exit 1
 os:
   - linux
   - osx
