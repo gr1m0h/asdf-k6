@@ -7,7 +7,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        k6: [0.25.0]
+        version: [0.25.0]
 
     runs-on: ${{ matrix.os }}
 
@@ -23,6 +23,6 @@ jobs:
           . $HOME/asdf/asdf.sh
           asdf plugin-add k6 $GITHUB_WORKSPACE
           asdf list-all k6
-          asdf install k6 ${{ matrix.k6 }}
-          asdf global k6 ${{ matrix.k6 }}
+          asdf install k6 ${{ matrix.version }}
+          asdf global k6 ${{ matrix.version }}
           k6 version
