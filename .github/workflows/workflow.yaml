@@ -1,19 +1,26 @@
 name: Main workflow
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+  schedule:
+    - cron: "0 0 * * 5"
 
 jobs:
   build:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        version: [0.25.0]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install asdf-vm
         run: git clone https://github.com/asdf-vm/asdf.git $HOME/asdf
@@ -21,8 +28,6 @@ jobs:
       - name: Install loadimpact/k6 and run test
         run: |
           . $HOME/asdf/asdf.sh
-          asdf plugin-add k6 $GITHUB_WORKSPACE
+          asdf plugin-add k6
           asdf list-all k6
-          asdf install k6 ${{ matrix.version }}
-          asdf global k6 ${{ matrix.version }}
-          k6 version
+          asdf install k6 latest
