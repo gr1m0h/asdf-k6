@@ -5,5 +5,5 @@
 
 ## Install
 ```
-asdf plugin-add k6
+asdf plugin add k6
 ```
