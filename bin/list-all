@@ -3,8 +3,8 @@ set -e
 
 releases_path="https://api.github.com/repos/loadimpact/k6/releases"
 cmd="curl -s"
-if [ -n "$OAUTH_TOKEN" ]; then
-  cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
+if [ -n "$GITHUB_API_TOKEN" ]; then
+  cmd="$cmd -H 'Authorization: token $GITHUB_API_TOKEN'"
 fi
 cmd="$cmd $releases_path"
 
