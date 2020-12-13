@@ -19,9 +19,15 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: asdf plugin test
-        uses: asdf-vm/actions/plugin-test@v1.0.0
-        env:
-          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          command: k6 version
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: install asdf-vm
+        run: git clone https://github.com/asdf-vm/asdf.git $HOME/asdf
+
+      - name: install k6 and run test
+        run: . $HOME/asdf/asdf.sh
+          asdf plugin add k6 $GITHUB_WORKSPACE
+          asdf list all k6
+          asdf install k6 latest
+          k6 version
