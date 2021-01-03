@@ -8,10 +8,10 @@ set -e
 case "$(uname -s)" in
 	"Darwin")
 		DOWNLOAD_URL="https://github.com/loadimpact/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-mac.zip"
-		curl -fL -o "${downloadPath}/k6.zip" "${DOWNLOAD_URL}"
+		curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.zip" "${DOWNLOAD_URL}"
 		;;
 	"Linux")
 		DOWNLOAD_URL="https://github.com/loadimpact/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-linux64.tar.gz"
-		curl -fL -o "${downloadPath}/k6.tar.gz" "${DOWNLOAD_URL}"
+		curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.tar.gz" "${DOWNLOAD_URL}"
 		;;
 esac
