@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e
+
+# check ASDF environment variables
+[ -n "$ASDF_INSTALL_VERSION" ] || (echo 'Missing ASDF_INSTALL_VERSION' >&2 && exit 1)
+[ -n "$ASDF_DOWNLOAD_PATH" ] || (echo 'Missing ASDF_DOWNLOAD_PATH' >&2 && exit 1)
+
+case "$(uname -s)" in
+	"Darwin")
+		DOWNLOAD_URL="https://github.com/loadimpact/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-mac.zip"
+		curl -fL -o "${downloadPath}/k6.zip" "${DOWNLOAD_URL}"
+		;;
+	"Linux")
+		DOWNLOAD_URL="https://github.com/loadimpact/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-linux64.tar.gz"
+		curl -fL -o "${downloadPath}/k6.tar.gz" "${DOWNLOAD_URL}"
+		;;
+esac
