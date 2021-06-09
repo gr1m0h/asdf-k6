@@ -17,7 +17,7 @@ case "$(uname -s)" in
 		;;
 	"Linux")
 		tar xzf k6.tar.gz
-		mv ./k6-v${ASDF_INSTALL_VERSION}-linux64/k6 "${toolPath}"
+		mv ./k6-v${ASDF_INSTALL_VERSION}-linux-amd64/k6 "${toolPath}"
 		;;
 esac
 
