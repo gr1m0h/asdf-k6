@@ -7,7 +7,7 @@ set -e
 
 case "$(uname -s)" in
 	"Darwin")
-		DOWNLOAD_URL="https://github.com/k6io/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-mac.zip"
+		DOWNLOAD_URL="https://github.com/k6io/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-macos-amd64.zip"
 		curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.zip" "${DOWNLOAD_URL}"
 		;;
 	"Linux")

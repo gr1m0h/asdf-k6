@@ -13,7 +13,7 @@ cd "${ASDF_DOWNLOAD_PATH}"
 case "$(uname -s)" in
 	"Darwin")
 		unzip -q k6.zip
-		mv ./k6-v${ASDF_INSTALL_VERSION}-mac/k6 "${toolPath}"
+		mv ./k6-v${ASDF_INSTALL_VERSION}-macos-amd64/k6 "${toolPath}"
 		;;
 	"Linux")
 		tar xzf k6.tar.gz
