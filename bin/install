@@ -10,14 +10,24 @@ toolPath="${ASDF_INSTALL_PATH}/bin/k6"
 
 cd "${ASDF_DOWNLOAD_PATH}"
 
+echo install script ...
+MACHINE="$(uname -m)"
+case "${MACHINE}" in
+	x86_64) ARCHITECTURE=amd64;;
+	aarch64|arm64) ARCHITECTURE=arm64;;
+	*) echo "Unknown machine architecture: $MACHINE"
+	   exit 1
+esac
+
+
 case "$(uname -s)" in
 	"Darwin")
 		unzip -q k6.zip
-		mv ./k6-v${ASDF_INSTALL_VERSION}-macos-amd64/k6 "${toolPath}"
+		mv ./k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}/k6 "${toolPath}"
 		;;
 	"Linux")
 		tar xzf k6.tar.gz
-		mv ./k6-v${ASDF_INSTALL_VERSION}-linux-amd64/k6 "${toolPath}"
+		mv ./k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}/k6 "${toolPath}"
 		;;
 esac
 

@@ -5,13 +5,22 @@ set -e
 [ -n "$ASDF_INSTALL_VERSION" ] || (echo 'Missing ASDF_INSTALL_VERSION' >&2 && exit 1)
 [ -n "$ASDF_DOWNLOAD_PATH" ] || (echo 'Missing ASDF_DOWNLOAD_PATH' >&2 && exit 1)
 
+echo install download ...
+MACHINE="$(uname -m)"
+case "${MACHINE}" in
+	x86_64) ARCHITECTURE=amd64;;
+	aarch64|arm64) ARCHITECTURE=arm64;;
+	*) echo "Unknown machine architecture: $MACHINE"
+	   exit 1
+esac
+
 case "$(uname -s)" in
 	"Darwin")
-		DOWNLOAD_URL="https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-macos-amd64.zip"
+		DOWNLOAD_URL="https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}.zip"
 		curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.zip" "${DOWNLOAD_URL}"
 		;;
 	"Linux")
-		DOWNLOAD_URL="https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-linux-amd64.tar.gz"
+		DOWNLOAD_URL="https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}.tar.gz"
 		curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.tar.gz" "${DOWNLOAD_URL}"
 		;;
 esac
