@@ -2,11 +2,11 @@
 set -e
 
 releases_path="https://api.github.com/repos/grafana/k6/releases"
-cmd="curl -s"
-if [ -n "$GITHUB_API_TOKEN" ]; then
-  cmd="$cmd -H 'Authorization: token $GITHUB_API_TOKEN'"
-fi
-cmd="$cmd $releases_path"
 
-versions=$(eval $cmd | sed -nE 's/^    "tag_name": "v(.+)",$/\1/pg' | sed -n -e '1!G;h;$p')
-echo $versions
+if [ -n "$GITHUB_API_TOKEN" ]; then
+  versions=$(curl -s -H "Authorization: token $GITHUB_API_TOKEN" "$releases_path")
+else
+  versions=$(curl -s "$releases_path")
+fi
+
+echo "$versions" | sed -nE 's/^    "tag_name": "v(.+)",$/\1/p' | sed '1!G;h;$!d' | tr '\n' ' '

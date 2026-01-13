@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
+# shellcheck source=lib/utils.sh
+source "$(dirname "$0")/../lib/utils.sh"
+
 # check ASDF environment variables
+[ -n "$ASDF_INSTALL_VERSION" ] || (echo 'Missing ASDF_INSTALL_VERSION' >&2 && exit 1)
 [ -n "$ASDF_INSTALL_PATH" ] || (echo 'Missing ASDF_INSTALL_PATH' >&2 && exit 1)
 [ -n "$ASDF_DOWNLOAD_PATH" ] || (echo 'Missing ASDF_DOWNLOAD_PATH' >&2 && exit 1)
 
@@ -10,25 +14,20 @@ toolPath="${ASDF_INSTALL_PATH}/bin/k6"
 
 cd "${ASDF_DOWNLOAD_PATH}"
 
-echo install script ...
-MACHINE="$(uname -m)"
-case "${MACHINE}" in
-	x86_64) ARCHITECTURE=amd64;;
-	aarch64|arm64) ARCHITECTURE=arm64;;
-	*) echo "Unknown machine architecture: $MACHINE"
-	   exit 1
-esac
+echo "Installing k6 v${ASDF_INSTALL_VERSION}..."
 
+ARCHITECTURE="$(get_architecture)"
+PLATFORM="$(get_platform)"
 
-case "$(uname -s)" in
-	"Darwin")
-		unzip -q k6.zip
-		mv ./k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}/k6 "${toolPath}"
-		;;
-	"Linux")
-		tar xzf k6.tar.gz
-		mv ./k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}/k6 "${toolPath}"
-		;;
+case "${PLATFORM}" in
+  darwin)
+    unzip -q k6.zip
+    mv "./k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}/k6" "${toolPath}"
+    ;;
+  linux)
+    tar xzf k6.tar.gz
+    mv "./k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}/k6" "${toolPath}"
+    ;;
 esac
 
 chmod +x "${toolPath}"
