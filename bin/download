@@ -5,7 +5,7 @@ set -e
 [ -n "$ASDF_INSTALL_VERSION" ] || (echo 'Missing ASDF_INSTALL_VERSION' >&2 && exit 1)
 [ -n "$ASDF_DOWNLOAD_PATH" ] || (echo 'Missing ASDF_DOWNLOAD_PATH' >&2 && exit 1)
 
-echo install download ...
+echo "Downloading k6 v${ASDF_INSTALL_VERSION}..."
 MACHINE="$(uname -m)"
 case "${MACHINE}" in
 	x86_64) ARCHITECTURE=amd64;;
