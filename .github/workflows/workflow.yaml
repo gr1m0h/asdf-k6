@@ -20,7 +20,14 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Get latest k6 version
+        id: k6-version
+        run: |
+          VERSION=$(curl -s https://api.github.com/repos/grafana/k6/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: asdf plugin test
-        uses: asdf-vm/actions/plugin-test@05e0d2ed97b598bfce82fd30daf324ae0c4570e6 # v3.0.2
+        uses: asdf-vm/actions/plugin-test@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
         with:
           command: k6 version
+          version: ${{ steps.k6-version.outputs.version }}
