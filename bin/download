@@ -14,12 +14,12 @@ ARCHITECTURE="$(get_architecture)"
 PLATFORM="$(get_platform)"
 
 case "${PLATFORM}" in
-  darwin)
-    curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.zip" \
-      "https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}.zip"
-    ;;
-  linux)
-    curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.tar.gz" \
-      "https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}.tar.gz"
-    ;;
+darwin)
+	curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.zip" \
+		"https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}.zip"
+	;;
+linux)
+	curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.tar.gz" \
+		"https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}.tar.gz"
+	;;
 esac

@@ -20,14 +20,14 @@ ARCHITECTURE="$(get_architecture)"
 PLATFORM="$(get_platform)"
 
 case "${PLATFORM}" in
-  darwin)
-    unzip -q k6.zip
-    mv "./k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}/k6" "${toolPath}"
-    ;;
-  linux)
-    tar xzf k6.tar.gz
-    mv "./k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}/k6" "${toolPath}"
-    ;;
+darwin)
+	unzip -q k6.zip
+	mv "./k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}/k6" "${toolPath}"
+	;;
+linux)
+	tar xzf k6.tar.gz
+	mv "./k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}/k6" "${toolPath}"
+	;;
 esac
 
 chmod +x "${toolPath}"
