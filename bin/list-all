@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
-set -e
 
-releases_path="https://api.github.com/repos/grafana/k6/releases"
+set -euo pipefail
 
-if [ -n "$GITHUB_API_TOKEN" ]; then
-  versions=$(curl -s -H "Authorization: token $GITHUB_API_TOKEN" "$releases_path")
+release_path="https://api.github.com/repos/grafana/k6/releases"
+
+if [ -n "${GITHUB_API_TOKEN:-}" ]; then
+	response=$(curl -s -H "Authorization: token ${GITHUB_API_TOKEN}" "$release_path")
 else
-  versions=$(curl -s "$releases_path")
+	response=$(curl -s "$release_path")
 fi
 
-echo "$versions" | sed -nE 's/^    "tag_name": "v(.+)",$/\1/p' | sed '1!G;h;$!d' | tr '\n' ' '
+versions=$(printf '%s\n' "$response" |
+	sed -nE 's/^    "tag_name": "v(.+)",$/\1/pg' |
+	sed -n -e '1!G;h;$p')
+
+# asdf expects all versions on a single, space-separated line, so the
+# word-splitting performed by an unquoted expansion is intentional here.
+# shellcheck disable=SC2086
+echo $versions
