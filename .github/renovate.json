@@ -3,5 +3,13 @@
   "extends": [
     "config:recommended",
     "helpers:pinGitHubActionDigests"
-  ]
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ],
+  "platformAutomerge": true,
+  "automergeStrategy": "squash"
 }
