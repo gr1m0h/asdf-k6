@@ -3,8 +3,8 @@ set -euo pipefail
 
 # Versions form part of an upstream URL; reject paths, queries and shell input.
 if [[ ! ${ASDF_INSTALL_VERSION:-} =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
-  echo "Invalid ASDF_INSTALL_VERSION" >&2
-  exit 1
+	echo "Invalid ASDF_INSTALL_VERSION" >&2
+	exit 1
 fi
 
 # shellcheck source=lib/utils.sh
@@ -31,9 +31,18 @@ linux)
 esac
 
 case "$PLATFORM" in
-  darwin) archive_ext=zip; upstream_os=macos ;;
-  linux) archive_ext=tar.gz; upstream_os=linux ;;
-  *) echo "Unsupported platform" >&2; exit 1 ;;
+darwin)
+	archive_ext=zip
+	upstream_os=macos
+	;;
+linux)
+	archive_ext=tar.gz
+	upstream_os=linux
+	;;
+*)
+	echo "Unsupported platform" >&2
+	exit 1
+	;;
 esac
 
 # Verify the exact asset, never an arbitrary entry from the checksum manifest.
@@ -44,17 +53,17 @@ asset_url="https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSI
 asset_name=${asset_url##*/}
 expected=$(awk -v name="$asset_name" '$2 == name || $2 == "*" name {print $1}' "$checksum_file")
 if [[ ! $expected =~ ^[[:xdigit:]]{64}$ ]]; then
-  echo "Missing or invalid SHA-256 for $asset_name" >&2
-  exit 1
+	echo "Missing or invalid SHA-256 for $asset_name" >&2
+	exit 1
 fi
 if command -v sha256sum >/dev/null 2>&1; then
-  actual=$(sha256sum "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}")
+	actual=$(sha256sum "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}")
 else
-  actual=$(shasum -a 256 "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}")
+	actual=$(shasum -a 256 "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}")
 fi
 actual=${actual%% *}
 if [ "$actual" != "$expected" ]; then
-  rm -f "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}"
-  echo "SHA-256 mismatch for $asset_name" >&2
-  exit 1
+	rm -f "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}"
+	echo "SHA-256 mismatch for $asset_name" >&2
+	exit 1
 fi
