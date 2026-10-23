@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+
+# Versions form part of an upstream URL; reject paths, queries and shell input.
+if [[ ! ${ASDF_INSTALL_VERSION:-} =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+	echo "Invalid ASDF_INSTALL_VERSION" >&2
+	exit 1
+fi
 
 # shellcheck source=lib/utils.sh
 source "$(dirname "$0")/../lib/utils.sh"
@@ -15,11 +21,49 @@ PLATFORM="$(get_platform)"
 
 case "${PLATFORM}" in
 darwin)
-	curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.zip" \
+	curl --proto "=https" --proto-redir "=https" --tlsv1.2 -fL -o "${ASDF_DOWNLOAD_PATH}/k6.zip" \
 		"https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-macos-${ARCHITECTURE}.zip"
 	;;
 linux)
-	curl -fL -o "${ASDF_DOWNLOAD_PATH}/k6.tar.gz" \
+	curl --proto "=https" --proto-redir "=https" --tlsv1.2 -fL -o "${ASDF_DOWNLOAD_PATH}/k6.tar.gz" \
 		"https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-linux-${ARCHITECTURE}.tar.gz"
 	;;
 esac
+
+case "$PLATFORM" in
+darwin)
+	archive_ext=zip
+	upstream_os=macos
+	;;
+linux)
+	archive_ext=tar.gz
+	upstream_os=linux
+	;;
+*)
+	echo "Unsupported platform" >&2
+	exit 1
+	;;
+esac
+
+# Verify the exact asset, never an arbitrary entry from the checksum manifest.
+checksum_file=$(mktemp)
+trap 'rm -f "$checksum_file"' EXIT
+curl --proto '=https' --proto-redir '=https' --tlsv1.2 -fsSL "https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-checksums.txt" -o "$checksum_file"
+asset_url="https://github.com/grafana/k6/releases/download/v${ASDF_INSTALL_VERSION}/k6-v${ASDF_INSTALL_VERSION}-${upstream_os}-${ARCHITECTURE}.${archive_ext}"
+asset_name=${asset_url##*/}
+expected=$(awk -v name="$asset_name" '$2 == name || $2 == "*" name {print $1}' "$checksum_file")
+if [[ ! $expected =~ ^[[:xdigit:]]{64}$ ]]; then
+	echo "Missing or invalid SHA-256 for $asset_name" >&2
+	exit 1
+fi
+if command -v sha256sum >/dev/null 2>&1; then
+	actual=$(sha256sum "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}")
+else
+	actual=$(shasum -a 256 "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}")
+fi
+actual=${actual%% *}
+if [ "$actual" != "$expected" ]; then
+	rm -f "${ASDF_DOWNLOAD_PATH}/k6.${archive_ext}"
+	echo "SHA-256 mismatch for $asset_name" >&2
+	exit 1
+fi
